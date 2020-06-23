@@ -1,0 +1,99 @@
+<!-- text on limit of loops -->
+<p>XX max loops</p>
+
+
+
+<DIV NG-APP = "GEOCODING" NG-CONTROLLER = "CONTROLLERGEO">
+<!-- INPUT ADRESS -->
+INPUT ADRESS: <INPUT TYPE = "TEXT" NG-MODEL = "LOCATION.ADDRESS"><BUTTON CLASS="BTN BTN-DEFAULT" NG-CLICK="LOCATION.GEOCODE()"> GEORREFERENCE </BUTTON>
+
+
+  <!-- RESULTS -->
+  <P>ADRESS IS ON {{LOCATION.LAT}}/{{LOCATION.LON}}</P>
+  <b>Geocoded Adresses: </b > <b id="counter"></b>
+
+
+  </DIV>
+  </DIV>
+  </DIV>
+  <SCRIPT SRC = "HTTPS://AJAX.GOOGLEAPIS.COM/AJAX/LIBS/JQUERY/2.2.2/JQUERY.MIN.JS"></SCRIPT>
+  <SCRIPT SRC = "HTTP://AJAX.GOOGLEAPIS.COM/AJAX/LIBS/ANGULARJS/1.3.14/ANGULAR.MIN.JS"></SCRIPT>
+  
+  
+<SCRIPT>
+  // Geocoding counter
+var CanGeo;
+CanGeo = 0
+
+var TotProc = (function () {
+var CantGeo = 0;
+return function () {CantGeo = CantGeo + 1; return CantGeo;}
+})
+
+
+();
+function myFunction(){  
+document.getElementById("counter").innerHTML = TotProc();
+}
+
+
+
+VAR APPCORE = ANGULAR.MODULE("GEOCODING", []);
+
+
+APPCORE.CONTROLLER('CONTROLLERGEO', FUNCTION($SCOPE) {
+var MaxGeo;
+MaxGeo = 0
+
+$SCOPE.LOCATION = {
+ADDRESS: "Write your adress  here",
+LAT: 0.00,
+LON: 0.00,
+
+
+    GEOCODE: FUNCTION() {
+    $.AJAX({
+    URL: 'HTTP://WWW.MAPQUESTAPI.COM/GEOCODING/V1/ADDRESS?KEY=XIUXSIOMG2DK2XCYA1GUVOAQKAA26IVE&OUTFORMAT=JSON&LOCATION=' + $SCOPE.LOCATION.ADDRESS,
+    METHOD: 'GET',
+
+
+    BEFORESEND: FUNCTION() {
+    $SCOPE.LOCATION.LAT = 0;
+    $SCOPE.LOCATION.LON = 0;
+           },
+    SUCCESS: FUNCTION(RESPONSE) {
+ 
+if (CanGeo > 9)
+{
+alert("Maximum reached")
+}
+
+else {
+CanGeo = CanGeo + 1;
+}
+
+
+
+if (MaxGeo < 10) {
+
+$SCOPE.LOCATION.LAT = RESPONSE.RESULTS[0].LOCATIONS[0].LATLNG.LAT;
+$SCOPE.LOCATION.LON = RESPONSE.RESULTS[0].LOCATIONS[0].LATLNG.LNG;
+$SCOPE.$APPLY();
+$SCOPE.LOCATION.ADDPOINTTOMAP(RESPONSE);
+
+
+MaxGeo = MaxGeo + 1;
+}
+},
+
+
+
+          ERROR: FUNCTION(ERROR) {
+          alert ("no adress found")              
+          }
+          });
+          },
+ 
+          
+   };
+   });
